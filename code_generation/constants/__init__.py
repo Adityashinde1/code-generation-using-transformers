@@ -13,3 +13,9 @@ MODELS_DIR = 'models'
 BUCKET_NAME = 'code-generation-using-transformers'
 GCP_DATA_FILE_NAME = 'english_python_data.txt'
 DATA_INGESTION_ARTIFACTS_DIR = 'DataIngestionArtifacts'
+
+DATA_TRANSFORMATION_ARTIFACTS_DIR = 'DataTransformationArtifacts'
+TEST_SIZE = 0.15
+TRAIN_EXPANSION_FACTOR = 100
+SOURCE_VOCAB_FILE_NAME = 'src_vocab.pkl'
+TARGET_VOCAB_FILE_NAME = 'trg_vocab.pkl'

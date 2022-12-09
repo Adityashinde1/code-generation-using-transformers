@@ -40,13 +40,10 @@ class DataIngestion:
                 self.get_data_from_gcp(bucket_name=BUCKET_NAME, file_name=GCP_DATA_FILE_NAME, path=self.data_ingestion_config.gcp_data_file_path)
                 logger.info(f"Downloaded the file from google cloud platform. File name - {os.path.basename(self.data_ingestion_config.gcp_data_file_path)}")
 
-                data_ingestion_artifacts = DataIngestionArtifacts(data_file_path=self.data_ingestion_config.gcp_data_file_path)
+            data_ingestion_artifacts = DataIngestionArtifacts(data_file_path=self.data_ingestion_config.gcp_data_file_path)
 
-                logger.info("Exited the initiate_data_ingestion method of data ingestion class")
-                return data_ingestion_artifacts
-
-            else:
-                pass
+            logger.info("Exited the initiate_data_ingestion method of data ingestion class")
+            return data_ingestion_artifacts
 
         except Exception as e:
             raise CodeGeneratorException(e, sys) from e

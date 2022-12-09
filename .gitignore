@@ -113,6 +113,7 @@ venv.bak/
 
 model.pt
 artifacts
+demo.py
 # Spyder project settings
 .spyderproject
 .spyproject

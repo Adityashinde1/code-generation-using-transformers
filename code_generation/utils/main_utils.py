@@ -1,7 +1,7 @@
-import shutil
+#import shutil
 import sys
 from typing import Dict
-import dill
+import dill 
 import pickle
 import numpy as np
 import yaml
@@ -96,36 +96,36 @@ class MainUtils:
             raise CodeGeneratorException(e, sys) from e
 
 
-    @staticmethod
-    def create_artifacts_zip(file_name: str, folder_name: str) -> None:
-        logger.info("Entered the create_artifacts_zip method of MainUtils class")
-        try:
-            shutil.make_archive(file_name, "zip", folder_name)
-            logger.info("Exited the create_artifacts_zip method of MainUtils class")
+    # @staticmethod
+    # def create_artifacts_zip(file_name: str, folder_name: str) -> None:
+    #     logger.info("Entered the create_artifacts_zip method of MainUtils class")
+    #     try:
+    #         shutil.make_archive(file_name, "zip", folder_name)
+    #         logger.info("Exited the create_artifacts_zip method of MainUtils class")
 
-        except Exception as e:
-            raise CodeGeneratorException(e, sys) from e
+    #     except Exception as e:
+    #         raise CodeGeneratorException(e, sys) from e
 
 
-    @staticmethod
-    def unzip_file(filename: str, folder_name: str) -> None:
-        logger.info("Entered the unzip_file method of MainUtils class")
-        try:
-            shutil.unpack_archive(filename, folder_name)
-            logger.info("Exited the unzip_file method of MainUtils class")
+    # @staticmethod
+    # def unzip_file(filename: str, folder_name: str) -> None:
+    #     logger.info("Entered the unzip_file method of MainUtils class")
+    #     try:
+    #         shutil.unpack_archive(filename, folder_name)
+    #         logger.info("Exited the unzip_file method of MainUtils class")
 
-        except Exception as e:
-            raise CodeGeneratorException(e, sys) from e
+    #     except Exception as e:
+    #         raise CodeGeneratorException(e, sys) from e
 
 
     @staticmethod        
-    def read_txt_file(filename: str) -> str:
+    def read_txt_file(file_path: str) -> str:
         logger.info("Entered the read_txt_file method of MainUtils class")
         try:
             # Opening file for read only
-            file1 = open(filename, 'r')
+            file1 = open(file_path, 'r', encoding="utf8")
             # read all text
-            text = file1.read()
+            text = file1.readlines()
             # close the file
             file1.close()
             logger.info("Exited the read_txt_file method of MainUtils class")
