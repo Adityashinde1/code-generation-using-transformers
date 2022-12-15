@@ -5,15 +5,10 @@ import random
 import pandas as pd
 from pandas import DataFrame
 from sklearn.model_selection import train_test_split
-import torch
-import torch.nn as nn
-import torch.optim as optim
 import keyword
 import logging
-import spacy
 from tokenize import tokenize
 from torchtext.legacy import data
-from torchtext.legacy.data import Field, BucketIterator, Iterator
 from code_generation.entity.config_entity import DataTransformationConfig
 from code_generation.entity.artifacts_entity import DataIngestionArtifacts, DataTransformationArtifacts
 from code_generation.exception import CodeGeneratorException
@@ -22,19 +17,11 @@ from code_generation.constants import *
 
 logger = logging.getLogger(__name__)
 
-SEED = 1234
-random.seed(SEED)
-torch.manual_seed(SEED)
-torch.cuda.manual_seed(SEED)
-torch.backends.cudnn.deterministic = True
-
-spacy.load('en_core_web_sm')
-
 
 class DataTransformation:
-    def __init__(self, data_ingestion_artifacts: DataIngestionArtifacts, data_transformation_config: DataTransformationConfig, utils: MainUtils) -> None:
-        self.data_ingestion_artifacts = data_ingestion_artifacts
+    def __init__(self, data_ingestion_artifacts = DataIngestionArtifacts, data_transformation_config = DataTransformationConfig, utils = MainUtils) -> None:
         self.data_transformation_config = data_transformation_config
+        self.data_ingestion_artifacts = data_ingestion_artifacts
         self.utils = utils
 
 
@@ -58,8 +45,7 @@ class DataTransformation:
             raise CodeGeneratorException(e, sys) from e
 
 
-    @staticmethod
-    def tokenize_python_code(python_code_str, mask_factor=0.3) -> list:
+    def tokenize_python_code(self, python_code_str, mask_factor=0.3) -> list:
 
         try: 
             var_dict = {} # Dictionary that stores masked variables
@@ -141,24 +127,35 @@ class DataTransformation:
             train_df, test_df = train_test_split(data_df, test_size=TEST_SIZE)
             logger.info("Splitted the data into train and test.")
 
-            Input = data.Field(tokenize = 'spacy', init_token='', eos_token='', lower=True)
-            Output = data.Field(tokenize = self.tokenize_python_code, init_token='', eos_token='', lower=False)
+            self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.train_df_path, data=train_df)
+            #train_df.to_csv(self.data_transformation_config.train_df_path, index=False)
+            logger.info(f"Saved the train dataframe in data transformation artifacts directory. File name - {os.path.basename(self.data_transformation_config.train_df_path)}")
 
-            fields = [('Input', Input),('Output', Output)]
+            self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.test_df_path, data=test_df)
+            #test_df.to_csv(self.data_transformation_config.test_df_path, index=False)
+            logger.info(f"Saved the test dataframe in data transformation artifacts directory. File name - {os.path.basename(self.data_transformation_config.test_df_path)}")
 
-            train_example, val_example = self.create_data_example(train_df=train_df, val_df=test_df, train_expansion_factor=TRAIN_EXPANSION_FACTOR, fields=fields)
+            # Input = data.Field(tokenize = 'spacy', init_token='', eos_token='', lower=True)
+            # Output = data.Field(tokenize = self.tokenize_python_code, init_token='', eos_token='', lower=False)
 
-            train_data = data.Dataset(train_example, fields)
-            valid_data =  data.Dataset(val_example, fields)
+            # fields = [('Input', Input),('Output', Output)]
 
-            Input.build_vocab(train_data, min_freq = 0)
-            Output.build_vocab(train_data, min_freq = 0)
+            # train_example, val_example = self.create_data_example(train_df=train_df, val_df=test_df, train_expansion_factor=TRAIN_EXPANSION_FACTOR, fields=fields)
 
-            self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.source_vocab_file_path, data=Input.vocab)
-            self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.target_vocab_file_path, data=Output.vocab)
+            # train_data = data.Dataset(train_example, fields)
+            # valid_data =  data.Dataset(val_example, fields)
 
-            data_transformation_artifacts = DataTransformationArtifacts(source_vocab_file_path=self.data_transformation_config.source_vocab_file_path,
-                                                                        target_vocab_file_path=self.data_transformation_config.target_vocab_file_path)
+            # Input.build_vocab(train_data, min_freq = 0)
+            # Output.build_vocab(train_data, min_freq = 0)
+
+            # self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.source_vocab_file_path, data=Input)
+            # self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.target_vocab_file_path, data=Output)
+
+            data_transformation_artifacts = DataTransformationArtifacts(train_df_path=self.data_transformation_config.train_df_path,
+                                                                        test_df_path=self.data_transformation_config.test_df_path)
+                                                                        # source_vocab_file_path=self.data_transformation_config.source_vocab_file_path,
+                                                                        # target_vocab_file_path=self.data_transformation_config.target_vocab_file_path)
+
 
             return data_transformation_artifacts
 

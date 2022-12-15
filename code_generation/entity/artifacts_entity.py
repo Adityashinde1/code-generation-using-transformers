@@ -9,5 +9,18 @@ class DataIngestionArtifacts:
 # Data Transformation Artifacts
 @dataclass
 class DataTransformationArtifacts:
-    source_vocab_file_path: str
-    target_vocab_file_path: str
+    train_df_path: str
+    test_df_path: str
+
+
+# Model Trainer Artifacts
+@dataclass
+class ModelTrainerAndEvalArtifacts:
+    trained_model_path: str
+
+
+# Model Pusher Artifacts
+@dataclass
+class ModelPusherArtifacts:
+    bucket_name: str
+    gcp_model_path: str
