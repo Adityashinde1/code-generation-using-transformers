@@ -316,7 +316,7 @@ class ModelTrainerAndEval:
             best_valid_loss = BEST_VALID_LOSS
 
             for epoch in range(EPOCHS):
-                print(f"epoch = {epoch}")
+                print(f"epoch = {epoch+1}")
                 start_time = time.time()
                 
                 train_example = []

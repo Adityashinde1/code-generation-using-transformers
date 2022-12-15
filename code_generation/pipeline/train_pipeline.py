@@ -60,11 +60,10 @@ class TrainPipeline:
 
     # This method is used to start the model trainer
     def start_model_trainer_and_eval(
-        self, data_transformation_artifact: DataTransformationArtifacts
-    ) -> ModelTrainerAndEvalArtifacts:
+        self, data_transformation_artifact: DataTransformationArtifacts) -> ModelTrainerAndEvalArtifacts:
         try:
             model_trainer = ModelTrainerAndEval(
-                data_transformation_artifact=data_transformation_artifact,
+                data_transformation_artifacts=data_transformation_artifact,
                 model_trainer_and_eval_config=self.model_trainer_and_eval_config,
                 utils=MainUtils,
                 gcloud=self.gcloud
@@ -84,7 +83,7 @@ class TrainPipeline:
         logger.info("Entered the start_model_pusher method of TrainPipeline class")
         try:
             model_pusher = ModelPusher(
-                model_trainer_and_eval_artifact=model_trainer_and_eval_artifact,
+                model_trainer_and_eval_artifacts=model_trainer_and_eval_artifact,
                 model_pusher_config=self.model_pusher_config,
                 gcloud=self.gcloud
             )
