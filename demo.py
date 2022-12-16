@@ -38,3 +38,11 @@ pred = ModelPredictor()
 code = pred.run_pipeline(src='write a function to add elements of list')
 
 print(code)
+
+# from code_generation.configuration.gcloud import GCloud
+# from code_generation.constants import *
+# from code_generation.entity.config_entity import ModelPredictorConfig
+# gcloud = GCloud()
+# model_predictor_config = ModelPredictorConfig()
+
+# gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=MODEL_FILE_NAME, destination=model_predictor_config.gcp_model_path)

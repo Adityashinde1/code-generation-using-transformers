@@ -84,10 +84,14 @@ class ModelPredictor:
 
             device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-            SRC = self.utils.load_pickle_file(filepath=self.model_predictor_config.source_vocab_file_path)
-            TRG = self.utils.load_pickle_file(filepath=self.model_predictor_config.target_vocab_file_path)
+            self.gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=SOURCE_VOCAB_FILE_NAME, destination=self.model_predictor_config.source_vocab_file_dest_path)
+            self.gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=TARGET_VOCAB_FILE_NAME, destination=self.model_predictor_config.target_vocab_file_dest_path)
+
+            SRC = self.utils.load_pickle_file(filepath=self.model_predictor_config.downloaded_source_vocab_file_path)
+            TRG = self.utils.load_pickle_file(filepath=self.model_predictor_config.downloaded_target_vocab_file_path)
 
             self.gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=MODEL_FILE_NAME, destination=self.model_predictor_config.gcp_model_path)
+            self.gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=SEQ_2_SEQ_MODEL_NAME, destination=self.model_predictor_config.seq_2_seq_model_instance_dest_path)
 
             model = torch.load(self.model_predictor_config.seq_2_seq_model_instance_path)
 

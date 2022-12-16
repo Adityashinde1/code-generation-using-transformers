@@ -286,6 +286,9 @@ class ModelTrainerAndEval:
             self.utils.dump_pickle_file(output_filepath=self.model_trainer_and_eval_config.source_vocab_file_path, data=Input)
             self.utils.dump_pickle_file(output_filepath=self.model_trainer_and_eval_config.target_vocab_file_path, data=Output)
 
+            self.gcloud.sync_folder_to_gcloud(gcp_bucket_url=BUCKET_NAME, filepath=self.model_trainer_and_eval_config.source_file_to_gcp_path, filename=SOURCE_VOCAB_FILE_NAME)
+            self.gcloud.sync_folder_to_gcloud(gcp_bucket_url=BUCKET_NAME, filepath=self.model_trainer_and_eval_config.target_file_to_gcp_path, filename=TARGET_VOCAB_FILE_NAME)
+
             device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
             input_dim = len(Input.vocab)
@@ -312,6 +315,8 @@ class ModelTrainerAndEval:
             model = Seq2Seq(encoder=encoder, decoder=decoder, src_pad_idx=src_pad_idx, trg_pad_idx=trg_pad_idx, device=device)
 
             torch.save(model, self.model_trainer_and_eval_config.seq_2_seq_model_instance_path)
+
+            self.gcloud.sync_folder_to_gcloud(gcp_bucket_url=BUCKET_NAME, filepath=self.model_trainer_and_eval_config.seq_2_seq_model_to_gcp_path, filename=SEQ_2_SEQ_MODEL_NAME)
 
             model.apply(self.initialize_weights)
 
