@@ -1,4 +1,3 @@
-import os
 import sys
 import logging
 from code_generation.exception import CodeGeneratorException
@@ -17,14 +16,18 @@ class ModelPusher:
 
 
     def initiate_model_pusher(self) -> ModelPusherArtifacts:
+        logger.info("Entered the initiate_model_pusher method of Model pusher class")
         try:
+            # Uploading the model to google container registry
             self.gcloud.sync_folder_to_gcloud(gcp_bucket_url=self.model_pusher_config.bucket_name,
                                                     filepath=self.model_trainer_and_eval_artifacts.trained_model_path,
                                                     filename=MODEL_FILE_NAME)
-
+                                                    
+            logger.info("Model pushed to google conatiner registry")
             model_pusher_artifacts = ModelPusherArtifacts(bucket_name=self.model_pusher_config.bucket_name,
                                                             gcp_model_path=self.model_trainer_and_eval_artifacts.trained_model_path)
 
+            logger.info("Exited the initiate_model_pusher method of Model pusher class")
             return model_pusher_artifacts
 
         except Exception as e:

@@ -12,19 +12,15 @@ class Encoder(nn.Module):
         super().__init__()
         try:
             self.device = device
-            
             self.tok_embedding = nn.Embedding(input_dim, hid_dim)
             self.pos_embedding = nn.Embedding(max_length, hid_dim)
-            
             self.layers = nn.ModuleList([EncoderLayer(hid_dim, 
                                                     enc_heads, 
                                                     enc_pf_dim,
                                                     enc_dropout, 
                                                     device) 
                                         for _ in range(enc_layers)])
-            
             self.dropout = nn.Dropout(enc_dropout)
-            
             self.scale = torch.sqrt(torch.FloatTensor([hid_dim])).to(device)
 
         except Exception as e:
@@ -35,11 +31,8 @@ class Encoder(nn.Module):
         try:
             batch_size = src.shape[0]
             src_len = src.shape[1]
-
             pos = torch.arange(0, src_len).unsqueeze(0).repeat(batch_size, 1).to(self.device)
-            
             src = self.dropout((self.tok_embedding(src) * self.scale) + self.pos_embedding(pos))
-            
             for layer in self.layers:
                 src = layer(src, src_mask)
                 

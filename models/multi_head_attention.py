@@ -11,7 +11,6 @@ class MultiHeadAttentionLayer(nn.Module):
         super().__init__()
         try:
             assert hid_dim % n_heads == 0
-            
             self.hid_dim = hid_dim
             self.n_heads = n_heads
             self.head_dim = hid_dim // n_heads
@@ -21,9 +20,7 @@ class MultiHeadAttentionLayer(nn.Module):
             self.fc_v = nn.Linear(hid_dim, hid_dim)
             
             self.fc_o = nn.Linear(hid_dim, hid_dim)
-            
             self.dropout = nn.Dropout(n_dropout)
-            
             self.scale = torch.sqrt(torch.FloatTensor([self.head_dim])).to(device)
 
         except Exception as e:
@@ -93,7 +90,6 @@ class PositionwiseFeedforwardLayer(nn.Module):
         try:
             self.fc_1 = nn.Linear(hid_dim, pf_dim)
             self.fc_2 = nn.Linear(pf_dim, hid_dim)
-            
             self.dropout = nn.Dropout(n_dropout)
 
         except Exception as e:
@@ -103,11 +99,9 @@ class PositionwiseFeedforwardLayer(nn.Module):
     def forward(self, x):
         try:
             #x = [batch size, seq len, hid dim]
-            
             x = self.dropout(torch.relu(self.fc_1(x)))
             
             #x = [batch size, seq len, pf dim]
-            
             x = self.fc_2(x)
             
             #x = [batch size, seq len, hid dim]

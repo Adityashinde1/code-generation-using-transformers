@@ -1,9 +1,5 @@
 import os
-#from datetime import datetime
 from from_root import from_root
-
-
-#TIMESTAMP: str = datetime.now().strftime("%m_%d_%Y_%H_%M_%S")
 
 ARTIFACTS_DIR = os.path.join(from_root(), "artifacts")#, TIMESTAMP)
 LOGS_DIR = 'logs'
@@ -36,10 +32,6 @@ DEC_MAX_LENGTH = 10000
 SOURCE_VOCAB_FILE_NAME = 'inpute_src.pkl'
 TARGET_VOCAB_FILE_NAME = 'output_trg.pkl'
 SEQ_2_SEQ_MODEL_NAME = 'seq_to_seq_model_instance.pt'
-
-# ENCODER_PARAMS = {"hid_dim":256,"enc_layers":3,"enc_heads":16,"enc_pf_dim":512,"enc_dropout":0.1,"max_length":1000}
-
-# DECODER_PARAMS = {"hid_dim":256,"dec_layers":3,"dec_heads":16,"dec_pf_dim":512,"dec_dropout":0.1,"max_length":10000}
 
 LEARNING_RATE = 0.0005
 EPOCHS = 100

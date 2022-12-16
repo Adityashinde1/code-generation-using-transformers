@@ -34,7 +34,6 @@ def cross_entropy(inputs, target, weight=None, ignore_index=-100, reduction='mea
     try:
         """cross entropy loss, with support for target distributions and label smoothing https://arxiv.org/abs/1512.00567"""
         smooth_eps = smooth_eps or 0
-
         # ordinary log-liklihood - use cross_entropy from nn
         if _is_long(target) and smooth_eps == 0:
             if from_logits:
