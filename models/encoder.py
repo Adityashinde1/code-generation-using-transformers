@@ -4,11 +4,11 @@ import torch
 import torch.nn as nn
 from code_generation.exception import CodeGeneratorException
 from models.multi_head_attention import MultiHeadAttentionLayer, PositionwiseFeedforwardLayer
-
+from typing import Optional
 logger = logging.getLogger(__name__)
 
 class Encoder(nn.Module):
-    def __init__(self, input_dim: int, hid_dim: int, enc_layers: int, enc_heads: int, enc_pf_dim: int, enc_dropout: float, device: str, max_length: int):
+    def __init__(self, input_dim: Optional[int], hid_dim: Optional[int], enc_layers: Optional[int], enc_heads: Optional[int], enc_pf_dim:Optional[int], enc_dropout: Optional[float], device: Optional[str], max_length: Optional[int]):
         super().__init__()
         try:
             self.device = device

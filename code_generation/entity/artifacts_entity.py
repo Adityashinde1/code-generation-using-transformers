@@ -17,6 +17,9 @@ class DataTransformationArtifacts:
 @dataclass
 class ModelTrainerAndEvalArtifacts:
     trained_model_path: str
+    source_vocab_file_path: str
+    target_vocab_file_path: str
+    seq_2_seq_model_path: str
 
 
 # Model Pusher Artifacts
