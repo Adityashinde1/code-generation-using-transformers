@@ -50,6 +50,6 @@ BATCH_SIZE = 16
 MODEL_FILE_NAME = 'model.pt'
 
 APP_HOST = "0.0.0.0"
-APP_PORT = 8000
+APP_PORT = 8080
 
 
