@@ -45,74 +45,6 @@ class DataTransformation:
             raise CodeGeneratorException(e, sys) from e
 
 
-    def tokenize_python_code(self, python_code_str, mask_factor=0.3) -> list:
-
-        try: 
-            var_dict = {} # Dictionary that stores masked variables
-
-            # certain reserved words that should not be treated as normal variables and
-            # hence need to be skipped from our variable mask augmentations
-            skip_list = ['range', 'enumerate', 'print', 'ord', 'int', 'float', 'zip'
-                        'char', 'list', 'dict', 'tuple', 'set', 'len', 'sum', 'min', 'max']
-            skip_list.extend(keyword.kwlist)
-
-            var_counter = 1
-            python_tokens = list(tokenize(io.BytesIO(python_code_str.encode('utf-8')).readline))
-            tokenized_output = []
-
-            for i in range(0, len(python_tokens)):
-                if python_tokens[i].type == 1 and python_tokens[i].string not in skip_list:
-                
-                    if i>0 and python_tokens[i-1].string in ['def', '.', 'import', 'raise', 'except', 'class']: # avoid masking modules, functions and error literals
-                        skip_list.append(python_tokens[i].string)
-                        tokenized_output.append((python_tokens[i].type, python_tokens[i].string))
-                    elif python_tokens[i].string in var_dict:  # if variable is already masked
-                        tokenized_output.append((python_tokens[i].type, var_dict[python_tokens[i].string]))
-                    elif random.uniform(0, 1) > 1-mask_factor: # randomly mask variables
-                        var_dict[python_tokens[i].string] = 'var_' + str(var_counter)
-                        var_counter+=1
-                        tokenized_output.append((python_tokens[i].type, var_dict[python_tokens[i].string]))
-                    else:
-                        skip_list.append(python_tokens[i].string)
-                        tokenized_output.append((python_tokens[i].type, python_tokens[i].string))
-            
-                else:
-                    tokenized_output.append((python_tokens[i].type, python_tokens[i].string))
-            
-            return tokenized_output
-
-        except Exception as e:
-            raise CodeGeneratorException(e, sys) from e
-
-
-    @staticmethod
-    def create_data_example(train_df: DataFrame, val_df: DataFrame, train_expansion_factor: int, fields: list) -> list:
-        try:
-            train_example = []
-            val_example = []
-
-            train_expansion_factor = train_expansion_factor
-            for j in range(train_expansion_factor):
-                for i in range(train_df.shape[0]):
-                    try:
-                        ex = data.Example.fromlist([train_df.question[i], train_df.solution[i]], fields)
-                        train_example.append(ex)
-                    except:
-                        pass
-
-            for i in range(val_df.shape[0]):
-                try:
-                    ex = data.Example.fromlist([val_df.question[i], val_df.solution[i]], fields)
-                    val_example.append(ex)
-                except:
-                    pass
-
-            return train_example, val_example
-
-        except Exception as e:
-            raise CodeGeneratorException(e, sys) from e
-
-
     def initiate_data_transformation(self) -> DataTransformationArtifacts:
         try:
             os.makedirs(self.data_transformation_config.data_transformation_artifacts_dir, exist_ok=True)
@@ -128,34 +60,13 @@ class DataTransformation:
             logger.info("Splitted the data into train and test.")
 
             self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.train_df_path, data=train_df)
-            #train_df.to_csv(self.data_transformation_config.train_df_path, index=False)
             logger.info(f"Saved the train dataframe in data transformation artifacts directory. File name - {os.path.basename(self.data_transformation_config.train_df_path)}")
 
             self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.test_df_path, data=test_df)
-            #test_df.to_csv(self.data_transformation_config.test_df_path, index=False)
             logger.info(f"Saved the test dataframe in data transformation artifacts directory. File name - {os.path.basename(self.data_transformation_config.test_df_path)}")
-
-            # Input = data.Field(tokenize = 'spacy', init_token='', eos_token='', lower=True)
-            # Output = data.Field(tokenize = self.tokenize_python_code, init_token='', eos_token='', lower=False)
-
-            # fields = [('Input', Input),('Output', Output)]
-
-            # train_example, val_example = self.create_data_example(train_df=train_df, val_df=test_df, train_expansion_factor=TRAIN_EXPANSION_FACTOR, fields=fields)
-
-            # train_data = data.Dataset(train_example, fields)
-            # valid_data =  data.Dataset(val_example, fields)
-
-            # Input.build_vocab(train_data, min_freq = 0)
-            # Output.build_vocab(train_data, min_freq = 0)
-
-            # self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.source_vocab_file_path, data=Input)
-            # self.utils.dump_pickle_file(output_filepath=self.data_transformation_config.target_vocab_file_path, data=Output)
 
             data_transformation_artifacts = DataTransformationArtifacts(train_df_path=self.data_transformation_config.train_df_path,
                                                                         test_df_path=self.data_transformation_config.test_df_path)
-                                                                        # source_vocab_file_path=self.data_transformation_config.source_vocab_file_path,
-                                                                        # target_vocab_file_path=self.data_transformation_config.target_vocab_file_path)
-
 
             return data_transformation_artifacts
 
