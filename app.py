@@ -1,7 +1,7 @@
-from fastapi import FastAPI, File
+from fastapi import FastAPI
 from uvicorn import run as app_run
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import Response, JSONResponse
+from fastapi.responses import Response
 from code_generation.pipeline.train_pipeline import TrainPipeline
 from code_generation.pipeline.prediction_pipeline import ModelPredictor
 from code_generation.constants import *
