@@ -46,3 +46,5 @@ print(code)
 # model_predictor_config = ModelPredictorConfig()
 
 # gcloud.sync_folder_from_gcloud(gcp_bucket_url=BUCKET_NAME, filename=MODEL_FILE_NAME, destination=model_predictor_config.gcp_model_path)
+
+
