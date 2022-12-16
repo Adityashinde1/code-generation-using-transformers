@@ -47,3 +47,4 @@ class DataIngestion:
 
         except Exception as e:
             raise CodeGeneratorException(e, sys) from e
+            
